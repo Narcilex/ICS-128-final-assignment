@@ -16,9 +16,9 @@
     <h1>Jayden Moran Fake ECommerce Site</h1>
     <!-- Use bootstrap canvas -->
     <div id="cardContainer" class="row row-cols-1 row-cols-md-3 g-4"></div>
-
+    <!-- start of off canvas tab -->
     <div
-      class="offcanvas offcanvas-start"
+      class="offcanvas offcanvas-end"
       tabindex="-1"
       id="offcanvasExample"
       aria-labelledby="offcanvasExampleLabel"
@@ -58,11 +58,22 @@
                 <td id="total" colspan="2">$0.00</td>
               </tr>
               <tr>
-                <td colspan="8" id="checkout" class="text-end">
+                <td class="text-end d-flex justify-content-start">
                   <button
+                    id="clearCartButton"
+                    class="btn btn-danger me-2"
+                    disabled
+                  >
+                    Clear Cart
+                  </button>
+                </td>
+                <td colspan="2" class="text-end">
+                  <button
+                    id="checkoutButton"
                     class="btn btn-primary"
                     data-bs-toggle="modal"
                     data-bs-target="#checkoutModal"
+                    disabled
                   >
                     Checkout
                   </button>
@@ -73,6 +84,7 @@
         </div>
       </div>
     </div>
+    <!-- start of checkout modal -->
     <div
       class="modal"
       id="checkoutModal"
@@ -84,38 +96,46 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="checkoutModalLabel">Checkout</h5>
-            <button
-              class="btn btn-primary"
-              data-bs-toggle="modal"
-              data-bs-target="#checkoutModal"
-            >
-              Checkout
-            </button>
           </div>
 
           <div class="modal-body">
             <ul class="nav nav-tabs" id="tabContent">
               <li class="nav-item">
                 <a class="nav-link active" data-bs-toggle="tab" href="#details"
-                  >Details</a
+                  >Payment Method</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#access-security"
-                  >Access / Security</a
+                <a class="nav-link" data-bs-toggle="tab" href="#billingDetails"
+                  >Billing Details</a
                 >
               </li>
               <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#networking"
-                  >Networking</a
+                <a class="nav-link" data-bs-toggle="tab" href="#shippingDetails"
+                  >Shipping Details</a
+                >
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#Confirmation"
+                  >Order Confirmation!</a
                 >
               </li>
             </ul>
 
             <div class="tab-content">
               <div class="tab-pane active" id="details">
+                <!-- input field for cardholder's name -->
+                <div class="form-group">
+                  <label for="cardName">Name on Card</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="cardName"
+                    placeholder="Card holder's name"
+                  />
+                </div>
                 <!-- Place the credit card form here -->
-                <div class="control-group">
+                <div class="control-group mt-3">
                   <label class="control-label">Credit Card Number</label>
                   <input
                     type="text"
@@ -123,17 +143,41 @@
                     placeholder="Enter your card number"
                   />
                 </div>
-                <!-- Add more fields for expiration date, CVV, etc. -->
+                <div class="d-flex">
+                  <!-- expiration date -->
+                  <div class="form-group m-3 ms-0">
+                    <label for="expirationDate">Expiration Date</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="expirationDate"
+                      placeholder="MM/YY"
+                    />
+                  </div>
+
+                  <!-- CVV -->
+                  <div class="form-group m-3">
+                    <label for="cvv">CVV</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="cvv"
+                      placeholder="123"
+                    />
+                  </div>
+                </div>
+                <div></div>
               </div>
-              <div class="tab-pane" id="access-security">content 0</div>
-              <div class="tab-pane" id="networking">content 1</div>
+              <div class="tab-pane" id="billingDetails">content 0</div>
+              <div class="tab-pane" id="shippingDetails">content 1</div>
+              <div class="tab-pane" id="Confirmation">content 1</div>
             </div>
           </div>
 
-          <div class="modal-footer">
+          <!-- <div class="modal-footer">
             <button
               type="button"
-              class="btn btn-secondary"
+              class="btn btn-danger"
               data-bs-dismiss="modal"
             >
               Close
@@ -141,9 +185,31 @@
             <button type="button" class="btn btn-primary">
               Confirm Purchase
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
+    </div>
+    <!-- add buttons to the bottom of the page for viewcart/checkout -->
+    <div class="fixed-bottom container-fluid d-flex justify-content-end">
+      <button
+        type="button"
+        class="btn btn-primary m-2"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#offcanvasExample"
+      >
+        View Cart
+      </button>
+
+      <button
+        type="button"
+        id="checkoutButton2"
+        class="btn btn-primary m-2"
+        data-bs-toggle="modal"
+        data-bs-target="#checkoutModal"
+        disabled
+      >
+        Checkout
+      </button>
     </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"

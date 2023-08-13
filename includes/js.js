@@ -104,7 +104,7 @@ function loadCard(src, title, content, price) {
 function displayCart() {
   let total = 0;
   $("tbody").empty(); // Clear the tbody contents
-
+  // iterate through the items in the cart and dynamically display them
   shoppingCart.forEach((item, key) => {
     let tableRow = document.createElement("tr");
     let title = document.createElement("td");
@@ -179,6 +179,16 @@ function displayCart() {
   document.getElementById("totalTax").textContent = `$${taxAmount.toFixed(2)}`;
   document.getElementById("total").textContent = `$${grandTotal.toFixed(2)}`;
   document.getElementById("total").classList.add("text-decoration-underline");
+  // show checkout button if cart is full
+  if (total > 0) {
+    document.getElementById("checkoutButton").disabled = false;
+    document.getElementById("checkoutButton2").disabled = false;
+    document.getElementById("clearCartButton").disabled = false;
+  } else {
+    document.getElementById("checkoutButton").disabled = true;
+    document.getElementById("checkoutButton2").disabled = true;
+    document.getElementById("clearCartButton").disabled = true;
+  }
 
   $(".quantity-btn").on("click", function () {
     let productId = parseInt($(this).data("productId"));
@@ -202,6 +212,13 @@ function displayCart() {
     displayCart(); // Refresh the cart display
   });
 }
+
+$("#clearCartButton").on("click", function () {
+  shoppingCart.clear(); // Clear the cart
+  $("tbody").empty();
+  displayCart(); // call display cart again
+});
+
 // A function the hides the offcanvas when the checkout modal is opened
 $("#checkoutModal").on("show.bs.modal", function () {
   var offcanvasElement = document.getElementById("offcanvasExample");
@@ -210,3 +227,12 @@ $("#checkoutModal").on("show.bs.modal", function () {
     bsOffcanvas.hide();
   }
 });
+
+// function that performs form validation and displays error messages when the checkout button is clicked.
+
+function checkout() {
+  const cardName = document.getElementById("cardName").value;
+  const cardNumber = document.getElementById("cardNumber").value;
+  const expirationDate = document.getElementById("expirationDate").value;
+  const cvv = document.getElementById("cvv").value;
+}
