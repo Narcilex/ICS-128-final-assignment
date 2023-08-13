@@ -236,3 +236,106 @@ function checkout() {
   const expirationDate = document.getElementById("expirationDate").value;
   const cvv = document.getElementById("cvv").value;
 }
+
+document
+  .querySelector("#details button")
+  .addEventListener("click", function (e) {
+    e.preventDefault(); // prevent default action
+
+    // Reset previous error states
+    const allInputs = document.querySelectorAll("#details .form-control");
+    allInputs.forEach((input) => input.classList.remove("is-invalid"));
+
+    const cardType = document.getElementById("cardtype").value;
+    const cardNameElem = document.getElementById("cardName");
+    const cardNumberElem = document.querySelector(
+      "#details .control-group input"
+    );
+    const expirationDateElem = document.getElementById("expirationDate");
+    const cvvElem = document.getElementById("cvv");
+
+    const cardName = cardNameElem.value.trim();
+    const cardNumber = cardNumberElem.value.trim();
+    const expirationDate = expirationDateElem.value.trim();
+    const cvv = cvvElem.value.trim();
+
+    let validForm = true;
+
+    // Name on Card Validation
+    if (!cardName) {
+      validForm = false;
+      cardNameElem.classList.add("is-invalid");
+    }
+
+    // Card Number Validation and Luhn Check
+    const luhnCheck = (num) => {
+      let arr = (num + "")
+        .split("")
+        .reverse()
+        .map((x) => parseInt(x));
+      let lastDigit = arr.splice(0, 1)[0];
+      let sum = arr.reduce(
+        (acc, val, i) =>
+          i % 2 !== 0 ? acc + val : acc + ((val *= 2) > 9 ? (val -= 9) : val),
+        0
+      );
+      sum += lastDigit;
+      return sum % 10 === 0;
+    };
+
+    switch (cardType) {
+      case "visa":
+        if (
+          !/^4[0-9]{12}(?:[0-9]{3})?$/.test(cardNumber) ||
+          !luhnCheck(cardNumber)
+        ) {
+          validForm = false;
+          cardNumberElem.classList.add("is-invalid");
+        }
+        break;
+      case "mastercard":
+        if (
+          !/^(?:5[1-5][0-9]{14})$/.test(cardNumber) ||
+          !luhnCheck(cardNumber)
+        ) {
+          validForm = false;
+          cardNumberElem.classList.add("is-invalid");
+        }
+        break;
+      case "amex":
+        if (!/^3[47][0-9]{13}$/.test(cardNumber) || !luhnCheck(cardNumber)) {
+          validForm = false;
+          cardNumberElem.classList.add("is-invalid");
+        }
+        break;
+    }
+
+    // Expiry Date Validation
+    if (!/^(0[1-9]|1[0-2])\/?([0-9]{4}|[0-9]{2})$/.test(expirationDate)) {
+      validForm = false;
+      expirationDateElem.classList.add("is-invalid");
+    }
+
+    // CVV Validation
+    switch (cardType) {
+      case "visa":
+      case "mastercard":
+        if (!/^[0-9]{3}$/.test(cvv)) {
+          validForm = false;
+          cvvElem.classList.add("is-invalid");
+        }
+        break;
+      case "amex":
+        if (!/^[0-9]{4}$/.test(cvv)) {
+          validForm = false;
+          cvvElem.classList.add("is-invalid");
+        }
+        break;
+    }
+
+    // If all validations pass, move to the next tab
+    if (validForm) {
+      let event = new Event("click");
+      document.querySelector("#billingDetails").dispatchEvent(event);
+    }
+  });
