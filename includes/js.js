@@ -31,7 +31,7 @@ async function getData() {
     }
   }
 }
-
+// Change
 // dynamically load in e-commerce site data from API
 getData()
   .then((data) => {
