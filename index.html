@@ -42,7 +42,6 @@
                 <th scope="col">Quantity</th>
               </tr>
             </thead>
-
             <tbody></tbody>
             <tfoot>
               <tr>
@@ -124,73 +123,198 @@
 
             <div class="tab-content">
               <div class="tab-pane active" id="details">
-                <!-- input field for cardholder's name -->
-                <div class="form-group">
-                  <label for="cardName">Name on Card</label>
+                <!-- Content for Billing Details -->
+                <div class="form-group mt-3">
+                  <label for="billingName">Full Name</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="cardName"
-                    placeholder="Card holder's name"
+                    id="billingName"
+                    placeholder="Full Name"
                   />
                 </div>
-                <!-- Place the credit card form here -->
-                <div class="control-group mt-3">
-                  <label class="control-label">Credit Card Number</label>
+                <div class="form-group mt-3">
+                  <label for="billingAddress">Address</label>
                   <input
                     type="text"
                     class="form-control"
-                    placeholder="Enter your card number"
+                    id="billingAddress"
+                    placeholder="1234 Main St"
                   />
                 </div>
-                <div class="d-flex">
-                  <!-- expiration date -->
-                  <div class="form-group m-3 ms-0">
-                    <label for="expirationDate">Expiration Date</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="expirationDate"
-                      placeholder="MM/YY"
-                    />
-                  </div>
-
-                  <!-- CVV -->
-                  <div class="form-group m-3">
-                    <label for="cvv">CVV</label>
-                    <input
-                      type="password"
-                      class="form-control"
-                      id="cvv"
-                      placeholder="123"
-                    />
-                  </div>
-                
-    </div>
-    <button class="btn btn-secondary mt-3" data-bs-toggle="tab" href="#billingDetails">Next: Billing Details</button>
-                
-                  
+                <div class="form-group mt-3">
+                  <label for="billingCity">City</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="billingCity"
+                    placeholder="City"
+                  />
                 </div>
-                <div></div>
+                <div class="form-group mt-3">
+                  <label for="billingPostalCode">Postal Code</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="billingPostalCode"
+                    placeholder="Postal Code"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="billingCountry">Country</label>
+                  <select class="form-control" id="billingCountry">
+                    <!-- List of countries can be added here -->
+                  </select>
+                </div>
+                <button
+                  class="btn btn-secondary mt-3"
+                  data-bs-toggle="tab"
+                  href="#details"
+                >
+                  Back to Payment
+                </button>
+                <button
+                  class="btn btn-secondary mt-3"
+                  data-bs-toggle="tab"
+                  href="#shippingDetails"
+                >
+                  Next: Shipping Details
+                </button>
               </div>
-              <div class="tab-pane" id="billingDetails">billingDetails</div>
-              <div class="tab-pane" id="shippingDetails">shippingDetails</div>
-              <div class="tab-pane" id="Confirmation">Confirmation</div>
+              <div class="tab-pane" id="billingDetails">
+                <!-- Content for Billing Details -->
+                <div class="form-group mt-3">
+                  <label for="billingName">Full Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="billingName"
+                    placeholder="Full Name"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="billingAddress">Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="billingAddress"
+                    placeholder="1234 Main St"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="billingCity">City</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="billingCity"
+                    placeholder="City"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="billingPostalCode">Postal Code</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="billingPostalCode"
+                    placeholder="Postal Code"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="billingCountry">Country</label>
+                  <select class="form-control" id="billingCountry">
+                    <!-- List of countries can be added here -->
+                  </select>
+                </div>
+                <button
+                  class="btn btn-secondary mt-3"
+                  data-bs-toggle="tab"
+                  href="#details"
+                >
+                  Back to Payment
+                </button>
+                <button
+                  class="btn btn-secondary mt-3"
+                  data-bs-toggle="tab"
+                  href="#shippingDetails"
+                >
+                  Next: Shipping Details
+                </button>
+              </div>
+              <div class="tab-pane" id="shippingDetails">
+                <!-- Content for Shipping Details -->
+                <div class="form-group mt-3">
+                  <label for="shippingName">Full Name</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shippingName"
+                    placeholder="Full Name"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="shippingAddress">Address</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shippingAddress"
+                    placeholder="1234 Main St"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="shippingCity">City</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shippingCity"
+                    placeholder="City"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="shippingPostalCode">Postal Code</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="shippingPostalCode"
+                    placeholder="Postal Code"
+                  />
+                </div>
+                <div class="form-group mt-3">
+                  <label for="shippingCountry">Country</label>
+                  <select class="form-control" id="shippingCountry">
+                    <!-- List of countries can be added here -->
+                  </select>
+                </div>
+                <button
+                  class="btn btn-secondary mt-3"
+                  data-bs-toggle="tab"
+                  href="#billingDetails"
+                >
+                  Back to Billing
+                </button>
+                <button
+                  class="btn btn-secondary mt-3"
+                  data-bs-toggle="tab"
+                  href="#Confirmation"
+                >
+                  Next: Confirmation
+                </button>
+              </div>
+              <div class="tab-pane" id="Confirmation">
+                <!-- Content for Order Confirmation -->
+                <!-- ... -->
+                <button
+                  class="btn btn-secondary mt-3"
+                  data-bs-toggle="tab"
+                  href="#shippingDetails"
+                >
+                  Back to Shipping
+                </button>
+                <button class="btn btn-primary mt-3">Confirm Purchase</button>
+              </div>
             </div>
           </div>
 
-          <!-- <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-danger"
-              data-bs-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-primary">
-              Confirm Purchase
-            </button>
-          </div> -->
+          <div class="modal-footer"></div>
         </div>
       </div>
     </div>
