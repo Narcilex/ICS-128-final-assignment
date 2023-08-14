@@ -98,31 +98,75 @@
           </div>
 
           <div class="modal-body">
-            <ul class="nav nav-tabs" id="tabContent">
-              <li class="nav-item">
-                <a class="nav-link active" data-bs-toggle="tab" href="#details"
-                  >Payment Method</a
+            <ul class="nav nav-tabs" id="tabContent" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  id="details-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#details"
+                  type="button"
+                  role="tab"
+                  aria-controls="details"
+                  aria-selected="true"
                 >
+                  Payment Method
+                </button>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#billingDetails"
-                  >Billing Details</a
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="billingDetails-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#billingDetails"
+                  type="button"
+                  role="tab"
+                  aria-controls="billingDetails"
+                  aria-selected="false"
                 >
+                  Billing Details
+                </button>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#shippingDetails"
-                  >Shipping Details</a
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="shippingDetails-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#shippingDetails"
+                  type="button"
+                  role="tab"
+                  aria-controls="shippingDetails"
+                  aria-selected="false"
                 >
+                  Shipping Details
+                </button>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" data-bs-toggle="tab" href="#Confirmation"
-                  >Order Confirmation!</a
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link"
+                  id="Confirmation-tab"
+                  data-bs-toggle="tab"
+                  data-bs-target="#Confirmation"
+                  type="button"
+                  role="tab"
+                  aria-controls="Confirmation"
+                  aria-selected="false"
                 >
+                  Order Confirmation!
+                </button>
               </li>
             </ul>
 
+            <!-- ... [rest of the modal content] ... -->
+
             <div class="tab-content">
-              <div class="tab-pane" id="details" role="tabpanel">
+              <div
+                class="tab-pane show active"
+                id="details"
+                role="tabpanel"
+                aria-labelledby="details-tab"
+                tabindex="0"
+              >
                 <!-- input field for cardholder's name -->
                 <div>
                   <label for="cardtype">Card Type</label>
@@ -174,14 +218,20 @@
                   </div>
                 </div>
                 <button
-                  class="btn btn-secondary mt-3"
-                  data-bs-toggle="tab"
-                  href="#billingDetails"
+                  type="button"
+                  id="detailsSubmit"
+                  class="btn btn-primary"
                 >
-                  Next: Billing Details
+                  Submit
                 </button>
               </div>
-              <div class="tab-pane" id="billingDetails" role="tabpanel">
+              <div
+                class="tab-pane"
+                id="billingDetails"
+                role="tabpanel"
+                aria-labelledby="billingDetails-tab"
+                tabindex="0"
+              >
                 <!-- Content for Billing Details -->
                 <div class="form-group mt-3">
                   <label for="billingName">Full Name</label>
@@ -222,26 +272,44 @@
                 <div class="form-group mt-3">
                   <label for="billingCountry">Country</label>
                   <select class="form-control" id="billingCountry">
-                    <!-- List of countries can be added here -->
+                    <option value="Canada">Canada</option>
+                    <option value="United States">United States</option>
                   </select>
+                  <label for="billingArea">State/Province</label>
+                  <select class="form-control" id="billingArea"></select>
                 </div>
+
                 <button
-                  class="btn btn-secondary mt-3"
-                  data-bs-toggle="tab"
-                  href="#details"
+                  type="button"
+                  id="billingSubmit"
+                  class="btn btn-primary"
                 >
-                  Back to Payment
-                </button>
-                <button
-                  class="btn btn-secondary mt-3"
-                  data-bs-toggle="tab"
-                  href="#shippingDetails"
-                >
-                  Next: Shipping Details
+                  Submit
                 </button>
               </div>
-              <div class="tab-pane" id="shippingDetails" role="tabpanel">
+              <div
+                class="tab-pane"
+                id="shippingDetails"
+                role="tabpanel"
+                aria-labelledby="shippingDetails-tab"
+                tabindex="0"
+              >
                 <!-- Content for Shipping Details -->
+                <div
+                  class="btn-group m-2 p-2"
+                  role="group"
+                  aria-label="Basic checkbox toggle button group"
+                >
+                  <input
+                    type="checkbox"
+                    class="btn-check"
+                    id="btncheck1"
+                    autocomplete="off"
+                  />
+                  <label class="btn btn-outline-primary" for="btncheck1"
+                    >Same as billing</label
+                  >
+                </div>
                 <div class="form-group mt-3">
                   <label for="shippingName">Full Name</label>
                   <input
@@ -281,45 +349,61 @@
                 <div class="form-group mt-3">
                   <label for="shippingCountry">Country</label>
                   <select class="form-control" id="shippingCountry">
-                    <!-- List of countries can be added here -->
+                    <option value="Canada">Canada</option>
+                    <option value="US">United States</option>
                   </select>
+                  <label for="shippingArea">State/Province</label>
                 </div>
-                <button
+                <!-- <button
                   class="btn btn-secondary mt-3"
                   data-bs-toggle="tab"
-                  href="#billingDetails"
+                  data-bs-target="#billingDetails"
                 >
-                  Back to Billing
+                  Next: Billing Details
                 </button>
+
                 <button
                   class="btn btn-secondary mt-3"
                   data-bs-toggle="tab"
-                  href="#Confirmation"
+                  data-bs-target="#Confirmation"
                 >
-                  Next: Confirmation
+                  Next: Order Confirmation
+                </button> -->
+                <button
+                  type="button"
+                  id="shippingSubmit"
+                  class="btn btn-primary"
+                >
+                  Submit
                 </button>
               </div>
-              <div class="tab-pane" id="Confirmation" role="tabpanel">
-                <div id="ConfirmationDiv">
-                  <!-- <p>Order Summary: ...</p>
-                  <p>Sub-Total: ...</p>
-                  <p>Tax: ...</p>
-                  <p>Shipping Fee: ...</p>
-                  <p>Discount: ...</p>
-                  <p>Total Amount: ...</p>
-                  <p>Payment Method Used: ...</p>
-                  <p>Expected Delivery Date: ...</p>
-                  <p>Order ID: ...</p>
-                  <p>Confirmation Message: ...</p> -->
+              <div
+                class="tab-pane"
+                id="Confirmation"
+                role="tabpanel"
+                aria-labelledby="Confirmation-tab"
+                tabindex="0"
+              >
+                <div class="m-2 p-2">
+                  <label for="curreny">Select Currency</label>
+                  <select
+                    name="Currency"
+                    id="currency"
+                    class="form-select w-25"
+                  >
+                    <option value="CAD">CAD</option>
+                    <option value="USD">USD</option>
+                  </select>
                 </div>
+                <div id="ConfirmationDiv"></div>
+
                 <button
-                  class="btn btn-secondary mt-3"
-                  data-bs-toggle="tab"
-                  href="#shippingDetails"
+                  type="button"
+                  id="confirmation-submit"
+                  class="btn btn-primary"
                 >
-                  Back to Shipping
+                  Submit
                 </button>
-                <button class="btn btn-primary mt-3">Confirm Purchase</button>
               </div>
             </div>
           </div>
@@ -328,7 +412,7 @@
         </div>
       </div>
     </div>
-    <!-- add buttons to the bottom of the page for viewcart/checkout -->
+
     <div class="fixed-bottom container-fluid d-flex justify-content-end">
       <button
         type="button"

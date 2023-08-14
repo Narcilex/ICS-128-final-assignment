@@ -4,6 +4,13 @@ const primaryURL = "https://fakestoreapi.com/products";
 const backupURL =
   "https://deepblue.camosun.bc.ca/~c0180354/ics128/final/fakestoreapi.json";
 const TAX_RATE = 0.12;
+let orderInfo = {};
+
+// let validationState = {
+//   billing: false,
+//   shipping: false,
+//   payment: false,
+// };
 
 async function getData() {
   try {
@@ -175,6 +182,10 @@ function displayCart() {
   let taxAmount = subtotal * TAX_RATE;
   let grandTotal = subtotal + taxAmount;
 
+  orderInfo.subTotal = subtotal;
+  orderInfo.Tax = taxAmount;
+  orderInfo.grandTotal = grandTotal;
+
   document.getElementById("subTotal").textContent = `$${total.toFixed(2)}`;
   document.getElementById("totalTax").textContent = `$${taxAmount.toFixed(2)}`;
   document.getElementById("total").textContent = `$${grandTotal.toFixed(2)}`;
@@ -212,7 +223,7 @@ function displayCart() {
     displayCart(); // Refresh the cart display
   });
 }
-
+// clears the cart
 $("#clearCartButton").on("click", function () {
   shoppingCart.clear(); // Clear the cart
   $("tbody").empty();
@@ -230,17 +241,12 @@ $("#checkoutModal").on("show.bs.modal", function () {
 
 // function that performs form validation and displays error messages when the checkout button is clicked.
 
-function checkout() {
-  const cardName = document.getElementById("cardName").value;
-  const cardNumber = document.getElementById("cardNumber").value;
-  const expirationDate = document.getElementById("expirationDate").value;
-  const cvv = document.getElementById("cvv").value;
-}
-
 document
-  .querySelector("#details button")
+  .querySelector("#detailsSubmit")
   .addEventListener("click", function (e) {
     e.preventDefault(); // prevent default action
+
+    const isFormValid = validateDetails();
 
     // Reset previous error states
     const allInputs = document.querySelectorAll("#details .form-control");
@@ -267,8 +273,8 @@ document
       cardNameElem.classList.add("is-invalid");
     }
 
-    // Card Number Validation and Luhn Check
-    const luhnCheck = (num) => {
+    // Card Number Validation and Check
+    const Check = (num) => {
       let arr = (num + "")
         .split("")
         .reverse()
@@ -287,23 +293,20 @@ document
       case "visa":
         if (
           !/^4[0-9]{12}(?:[0-9]{3})?$/.test(cardNumber) ||
-          !luhnCheck(cardNumber)
+          !Check(cardNumber)
         ) {
           validForm = false;
           cardNumberElem.classList.add("is-invalid");
         }
         break;
       case "mastercard":
-        if (
-          !/^(?:5[1-5][0-9]{14})$/.test(cardNumber) ||
-          !luhnCheck(cardNumber)
-        ) {
+        if (!/^(?:5[1-5][0-9]{14})$/.test(cardNumber) || !Check(cardNumber)) {
           validForm = false;
           cardNumberElem.classList.add("is-invalid");
         }
         break;
       case "amex":
-        if (!/^3[47][0-9]{13}$/.test(cardNumber) || !luhnCheck(cardNumber)) {
+        if (!/^3[47][0-9]{13}$/.test(cardNumber) || !Check(cardNumber)) {
           validForm = false;
           cardNumberElem.classList.add("is-invalid");
         }
@@ -332,10 +335,441 @@ document
         }
         break;
     }
+  });
 
-    // If all validations pass, move to the next tab
-    if (validForm) {
-      let event = new Event("click");
-      document.querySelector("#billingDetails").dispatchEvent(event);
+document.addEventListener("DOMContentLoaded", function () {
+  const paymentBtn = document.querySelector(
+    "[data-bs-target='#billingDetails']"
+  );
+  const billingBtn = document.querySelector(
+    "[data-bs-target='#shippingDetails']"
+  );
+
+  paymentBtn.addEventListener("click", function (e) {
+    if (!validatePaymentDetails()) {
+      e.preventDefault();
     }
   });
+
+  billingBtn.addEventListener("click", function (e) {
+    if (!validateBillingDetails()) {
+      e.preventDefault();
+    }
+  });
+
+  $("billingSubmit").on("click", function validateBillingDetails() {
+    let billingName = document.getElementById("billingName").value;
+    let billingAddress = document.getElementById("billingAddress").value;
+    let billingCity = document.getElementById("billingCity").value;
+    let billingPostalCode = document.getElementById("billingPostalCode").value;
+    let billingCountry = document.getElementById("billingCountry").value;
+
+    return (
+      billingName !== "" &&
+      billingAddress !== "" &&
+      billingCity !== "" &&
+      billingPostalCode !== "" &&
+      billingCountry !== ""
+    );
+  });
+
+  // You can add event listeners for additional tabs and validations as needed
+});
+function validateShippingDetails() {
+  let shippingName = document.getElementById("shippingName").value;
+  let shippingAddress = document.getElementById("shippingAddress").value;
+  let shippingCity = document.getElementById("shippingCity").value;
+  let shippingPostalCode = document.getElementById("shippingPostalCode").value;
+  let shippingCountry = document.getElementById("shippingCountry").value;
+
+  // rudimentary checks
+  return (
+    shippingName !== "" &&
+    shippingAddress !== "" &&
+    shippingCity !== "" &&
+    shippingPostalCode !== "" &&
+    shippingCountry !== ""
+  );
+}
+
+$(document).ready(function () {
+  $("#billingSubmit").on("click", function () {
+    let isValid = validateBillingDetails();
+    if (!isValid) {
+      event.preventDefault();
+    }
+  });
+
+  function validateBillingDetails() {
+    let validForm = true;
+
+    // Get all input values
+    let billingName = document.getElementById("billingName").value.trim();
+    let billingAddress = document.getElementById("billingAddress").value.trim();
+    let billingCity = document.getElementById("billingCity").value.trim();
+    let billingPostalCode = document
+      .getElementById("billingPostalCode")
+      .value.trim();
+    let billingCountry = document.getElementById("billingCountry").value.trim();
+
+    // Clear previous error states
+    let allInputs = document.querySelectorAll("#billingDetails .form-control");
+    allInputs.forEach((input) => input.classList.remove("is-invalid"));
+
+    // Full Name validation
+    if (billingName === "") {
+      validForm = false;
+      document.getElementById("billingName").classList.add("is-invalid");
+    }
+
+    // Address validation
+    if (billingAddress === "") {
+      validForm = false;
+      document.getElementById("billingAddress").classList.add("is-invalid");
+    }
+
+    // City validation
+    if (billingCity === "") {
+      validForm = false;
+      document.getElementById("billingCity").classList.add("is-invalid");
+    }
+
+    // Postal Code validation
+    if (billingPostalCode === "") {
+      validForm = false;
+      document.getElementById("billingPostalCode").classList.add("is-invalid");
+    } else {
+      if (
+        billingCountry === "Canada" &&
+        !/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(billingPostalCode)
+      ) {
+        // Add Canadian postal code validation
+        validForm = false;
+        document
+          .getElementById("billingPostalCode")
+          .classList.add("is-invalid");
+      } else if (
+        billingCountry === "United States" &&
+        !/^\d{5}(-\d{4})?$/.test(billingPostalCode)
+      ) {
+        // Add US postal code validation
+        validForm = false;
+        document
+          .getElementById("billingPostalCode")
+          .classList.add("is-invalid");
+      }
+    }
+
+    // Country validation
+    if (billingCountry === "") {
+      validForm = false;
+      document.getElementById("billingCountry").classList.add("is-invalid");
+    }
+
+    return validForm;
+  }
+});
+
+$(document).ready(function () {
+  $("#shippingSubmit").on("click", function () {
+    let isSameAsBilling = document.getElementById("btncheck1").checked;
+
+    // If 'Same as billing' is checked, bypass validation and return true
+    if (isSameAsBilling) {
+      return true;
+    }
+
+    let isValid = validateShippingDetails();
+    if (!isValid) {
+      event.preventDefault();
+    }
+  });
+
+  function validateShippingDetails() {
+    let validForm = true;
+
+    // Get all input values
+    let shippingName = document.getElementById("shippingName").value.trim();
+    let shippingAddress = document
+      .getElementById("shippingAddress")
+      .value.trim();
+    let shippingCity = document.getElementById("shippingCity").value.trim();
+    let shippingPostalCode = document
+      .getElementById("shippingPostalCode")
+      .value.trim();
+    let shippingCountry = document
+      .getElementById("shippingCountry")
+      .value.trim();
+
+    // Clear previous error and valid states
+    let allInputs = document.querySelectorAll("#shippingDetails .form-control");
+    allInputs.forEach((input) => {
+      input.classList.remove("is-invalid");
+      input.classList.remove("is-valid");
+    });
+
+    // Full Name validation
+    if (shippingName === "") {
+      validForm = false;
+      document.getElementById("shippingName").classList.add("is-invalid");
+    } else {
+      document.getElementById("shippingName").classList.add("is-valid");
+    }
+
+    // Address validation
+    if (shippingAddress === "") {
+      validForm = false;
+      document.getElementById("shippingAddress").classList.add("is-invalid");
+    } else {
+      document.getElementById("shippingAddress").classList.add("is-valid");
+    }
+
+    // City validation
+    if (shippingCity === "") {
+      validForm = false;
+      document.getElementById("shippingCity").classList.add("is-invalid");
+    } else {
+      document.getElementById("shippingCity").classList.add("is-valid");
+    }
+
+    // Postal Code validation
+    if (shippingPostalCode === "") {
+      validForm = false;
+      document.getElementById("shippingPostalCode").classList.add("is-invalid");
+    } else {
+      document.getElementById("shippingPostalCode").classList.add("is-valid");
+    }
+    if (billingPostalCode === "") {
+      validForm = false;
+      document.getElementById("billingPostalCode").classList.add("is-invalid");
+    } else {
+      if (
+        billingCountry === "Canada" &&
+        !/^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/.test(billingPostalCode)
+      ) {
+        // Add Canadian postal code validation
+        validForm = false;
+        document
+          .getElementById("shippingPostalCode")
+          .classList.add("is-invalid");
+      } else if (
+        billingCountry === "United States" &&
+        !/^\d{5}(-\d{4})?$/.test(billingPostalCode)
+      ) {
+        // Add US postal code validation
+        validForm = false;
+        document
+          .getElementById("shippingPostalCode")
+          .classList.add("is-invalid");
+      }
+    }
+
+    // Country validation
+    if (shippingCountry === "") {
+      validForm = false;
+      document.getElementById("shippingCountry").classList.add("is-invalid");
+    } else {
+      document.getElementById("shippingCountry").classList.add("is-valid");
+    }
+
+    return validForm;
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  setupCountryToAreaMapping("billingCountry", "billingArea");
+  setupCountryToAreaMapping("shippingCountry", "shippingArea");
+
+  function setupCountryToAreaMapping(countryId, areaId) {
+    const countrySelect = document.getElementById(countryId);
+    const areaSelect = document.getElementById(areaId);
+
+    countrySelect.addEventListener("change", function () {
+      // First, clear any existing options in the areaSelect
+      areaSelect.innerHTML = "";
+
+      // Now, populate based on the country
+      if (countrySelect.value === "Canada") {
+        const provinces = [
+          "Alberta",
+          "British Columbia",
+          "Manitoba",
+          "New Brunswick",
+          "Newfoundland and Labrador",
+          "Nova Scotia",
+          "Ontario",
+          "Prince Edward Island",
+          "Quebec",
+          "Saskatchewan",
+          "Northwest Territories",
+          "Nunavut",
+          "Yukon",
+        ];
+
+        populateOptions(areaSelect, provinces);
+      } else if (
+        countrySelect.value === "US" ||
+        countrySelect.value === "United States"
+      ) {
+        const states = [
+          "Alabama",
+          "Alaska",
+          "Arizona",
+          "Arkansas",
+          "California",
+          "Colorado",
+          "Connecticut",
+          "Delaware",
+          "Florida",
+          "Georgia",
+          "Hawaii",
+          "Idaho",
+          "Illinois",
+          "Indiana",
+          "Iowa",
+          "Kansas",
+          "Kentucky",
+          "Louisiana",
+          "Maine",
+          "Maryland",
+          "Massachusetts",
+          "Michigan",
+          "Minnesota",
+          "Mississippi",
+          "Missouri",
+          "Montana",
+          "Nebraska",
+          "Nevada",
+          "New Hampshire",
+          "New Jersey",
+          "New Mexico",
+          "New York",
+          "North Carolina",
+          "North Dakota",
+          "Ohio",
+          "Oklahoma",
+          "Oregon",
+          "Pennsylvania",
+          "Rhode Island",
+          "South Carolina",
+          "South Dakota",
+          "Tennessee",
+          "Texas",
+          "Utah",
+          "Vermont",
+          "Virginia",
+          "Washington",
+          "West Virginia",
+          "Wisconsin",
+          "Wyoming",
+        ];
+
+        populateOptions(areaSelect, states);
+      }
+    });
+  }
+
+  function populateOptions(selectElement, areas) {
+    for (const area of areas) {
+      const option = document.createElement("option");
+      option.value = area;
+      option.innerText = area;
+      selectElement.appendChild(option);
+    }
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  const currencySelect = document.getElementById("currency");
+  const confirmationDiv = document.getElementById("ConfirmationDiv");
+
+  currencySelect.addEventListener("change", function () {
+    // Fetch currency rates when currency selection changes
+    fetch(
+      `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/cad.json`
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const selectedCurrency = currencySelect.value;
+        const conversionRate = data["cad"][`${selectedCurrency.toLowerCase()}`];
+        console.log(selectedCurrency);
+        console.log(conversionRate);
+
+        // Clear any existing data
+        confirmationDiv.innerHTML = "";
+
+        for (const key in orderInfo) {
+          // Convert the string values to numbers and multiply by conversion rate
+          const convertedAmount = (
+            parseFloat(orderInfo[key]) * conversionRate
+          ).toFixed(2);
+          const p = document.createElement("p");
+          p.textContent = `${capitalizeFirstLetter(
+            key.replace(/([A-Z])/g, " $1")
+          )}:  $: ${convertedAmount} ${selectedCurrency}`;
+          confirmationDiv.appendChild(p);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching currency rates:", error);
+      });
+  });
+
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  }
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  let confirmationButton = document.getElementById("confirmation-submit");
+  let validationState = {
+    billing: validateBillingDetails(),
+    shipping: validateShippingDetails(),
+    payment: true,
+  };
+  confirmationButton.addEventListener("click", function () {
+    // Check if all tabs are validated
+    let allValid = Object.values(validationState).every(
+      (status) => status === true
+    );
+
+    if (!allValid) {
+      alert(
+        "Please ensure all details are correctly filled before submitting!"
+      );
+      return;
+    }
+
+    let orderData = {};
+
+    fetch("https://deepblue.camosun.ca/~c0180354/ics128/final-project/", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderData),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Handle the response here. Let's assume a successful submission returns { success: true }
+        if (data.success) {
+          alert("Order submitted successfully!");
+          emptyCart();
+        } else {
+          alert(`Error: ${data.message}`); // Assuming the error response has a 'message' key.
+        }
+      })
+      .catch((error) => {
+        alert("There was a problem with the submission: " + error.message);
+      });
+  });
+});
+
+function emptyCart() {
+  // Here, implement the logic to empty the cart
+}
