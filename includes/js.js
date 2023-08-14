@@ -246,17 +246,13 @@ document
   .addEventListener("click", function (e) {
     e.preventDefault(); // prevent default action
 
-    const isFormValid = validateDetails();
-
     // Reset previous error states
     const allInputs = document.querySelectorAll("#details .form-control");
     allInputs.forEach((input) => input.classList.remove("is-invalid"));
 
     const cardType = document.getElementById("cardtype").value;
     const cardNameElem = document.getElementById("cardName");
-    const cardNumberElem = document.querySelector(
-      "#details .control-group input"
-    );
+    const cardNumberElem = document.getElementById("cardNumber");
     const expirationDateElem = document.getElementById("expirationDate");
     const cvvElem = document.getElementById("cvv");
 
@@ -337,6 +333,22 @@ document
     }
   });
 
+$("#billingSubmit").on("click", function validateBillingDetails() {
+  let billingName = document.getElementById("billingName").value;
+  let billingAddress = document.getElementById("billingAddress").value;
+  let billingCity = document.getElementById("billingCity").value;
+  let billingPostalCode = document.getElementById("billingPostalCode").value;
+  let billingCountry = document.getElementById("billingCountry").value;
+
+  return (
+    billingName !== "" &&
+    billingAddress !== "" &&
+    billingCity !== "" &&
+    billingPostalCode !== "" &&
+    billingCountry !== ""
+  );
+});
+
 document.addEventListener("DOMContentLoaded", function () {
   const paymentBtn = document.querySelector(
     "[data-bs-target='#billingDetails']"
@@ -346,34 +358,16 @@ document.addEventListener("DOMContentLoaded", function () {
   );
 
   paymentBtn.addEventListener("click", function (e) {
-    if (!validatePaymentDetails()) {
-      e.preventDefault();
-    }
+    // if (!validatePaymentDetails()) {
+    //   e.preventDefault();
+    // }
   });
 
   billingBtn.addEventListener("click", function (e) {
-    if (!validateBillingDetails()) {
+    if (!validateShippingDetails()) {
       e.preventDefault();
     }
   });
-
-  $("billingSubmit").on("click", function validateBillingDetails() {
-    let billingName = document.getElementById("billingName").value;
-    let billingAddress = document.getElementById("billingAddress").value;
-    let billingCity = document.getElementById("billingCity").value;
-    let billingPostalCode = document.getElementById("billingPostalCode").value;
-    let billingCountry = document.getElementById("billingCountry").value;
-
-    return (
-      billingName !== "" &&
-      billingAddress !== "" &&
-      billingCity !== "" &&
-      billingPostalCode !== "" &&
-      billingCountry !== ""
-    );
-  });
-
-  // You can add event listeners for additional tabs and validations as needed
 });
 function validateShippingDetails() {
   let shippingName = document.getElementById("shippingName").value;
@@ -391,7 +385,6 @@ function validateShippingDetails() {
     shippingCountry !== ""
   );
 }
-
 $(document).ready(function () {
   $("#billingSubmit").on("click", function () {
     let isValid = validateBillingDetails();
@@ -723,8 +716,8 @@ document.addEventListener("DOMContentLoaded", function () {
 document.addEventListener("DOMContentLoaded", function () {
   let confirmationButton = document.getElementById("confirmation-submit");
   let validationState = {
-    billing: validateBillingDetails(),
-    shipping: validateShippingDetails(),
+    billing: true,
+    shipping: true,
     payment: true,
   };
   confirmationButton.addEventListener("click", function () {
@@ -740,13 +733,35 @@ document.addEventListener("DOMContentLoaded", function () {
       return;
     }
 
-    let orderData = {};
-
-    fetch("https://deepblue.camosun.ca/~c0180354/ics128/final-project/", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    let orderData = {
+      billingDetails: {
+        fullName: document.getElementById("billingName").value.trim(),
+        address: document.getElementById("billingAddress").value.trim(),
+        city: document.getElementById("billingCity").value.trim(),
+        postalCode: document.getElementById("billingPostalCode").value.trim(),
+        country: document.getElementById("billingCountry").value,
+        stateOrProvince: document.getElementById("billingArea").value, // This was added based on the script modification for country-state dropdowns.
       },
+      shippingDetails: {
+        fullName: document.getElementById("shippingName").value.trim(),
+        address: document.getElementById("shippingAddress").value.trim(),
+        city: document.getElementById("shippingCity").value.trim(),
+        postalCode: document.getElementById("shippingPostalCode").value.trim(),
+        country: document.getElementById("shippingCountry").value,
+      },
+      paymentDetails: {
+        cardType: document.getElementById("cardtype").value,
+        cardName: document.getElementById("cardName").value.trim(),
+        cardNumber: document.getElementById("cardNumber").value.trim(), // Assuming this is the id for the card number input
+        expirationDate: document.getElementById("expirationDate").value.trim(),
+        cvv: document.getElementById("cvv").value.trim(),
+      },
+    };
+
+    fetch("https://deepblue.camosun.ca/~c0526462/ics128/final-project/", {
+      method: "POST",
+      cache: "no-cache",
+      body: FormData,
       body: JSON.stringify(orderData),
     })
       .then((response) => {
